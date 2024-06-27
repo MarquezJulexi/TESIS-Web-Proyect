@@ -1,9 +1,12 @@
-from flask import Blueprint, request, jsonify, session
+from flask import Blueprint, request, jsonify, session, current_app
 from . import db
 from .models import Administrador, Establecimiento, Horario
+import openai
+import json
 
 bp = Blueprint('routes', __name__)
 
+#ruta para realizar el login
 @bp.route('/login', methods=['POST'])
 def login():
     try:
@@ -19,6 +22,7 @@ def login():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+#ruta para realizar el logout
 @bp.route('/logout', methods=['POST'])
 def logout():
     try:
@@ -27,6 +31,42 @@ def logout():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+#ruta para obtener los establecimientos
+@bp.route('/establecimientos', methods=['GET'])
+def obtener_establecimientos():
+    try:
+
+
+        establecimientos = Establecimiento.query.all()
+        lista_establecimientos = []
+
+        for establecimiento in establecimientos:
+            horarios = Horario.query.filter_by(establecimiento_id=establecimiento.id).all()
+            horarios_json = [
+                {
+                    'dia': horario.dia_semana,
+                    'apertura': horario.hora_apertura,
+                    'cierre': horario.hora_cierre
+                }
+                for horario in horarios
+            ]
+            lista_establecimientos.append({
+                'id': establecimiento.id,
+                'nombre': establecimiento.nombre,
+                'direccion': establecimiento.direccion,
+                'latitud': str(establecimiento.latitud),
+                'longitud': str(establecimiento.longitud),
+                'descripcion': establecimiento.descripcion,
+                'tipo': establecimiento.tipo,
+                'horarios': horarios_json
+            })
+
+        return jsonify(lista_establecimientos), 200
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+#ruta para crear un establecimiento
 @bp.route('/establecimientos', methods=['POST'])
 def add_establecimiento():
     try:
@@ -59,6 +99,7 @@ def add_establecimiento():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+#ruta para actualizar la
 @bp.route('/establecimientos/<int:id>', methods=['PUT'])
 def edit_establecimiento(id):
     try:
@@ -188,5 +229,57 @@ def update_password():
         db.session.commit()
 
         return jsonify({'message': 'Password updated successfully'}), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+openai.api_key =current_app.config['OPENAI_API_KEY']
+
+@bp.route('/preguntar', methods=['POST'])
+def preguntar_openai():
+    try:
+        data = request.get_json()
+        pregunta_usuario = data.get('pregunta')
+
+        # Obtener los establecimientos de la base de datos
+        establecimientos = Establecimiento.query.all()
+        establecimientos_info = [
+            {
+                'nombre': est.nombre,
+                'direccion': est.direccion,
+                'latitud': str(est.latitud),
+                'longitud': str(est.longitud),
+                'descripcion': est.descripcion,
+                'tipo': est.tipo,
+                'horarios': [
+                    {
+                        'dia': horario.dia_semana,
+                        'apertura': str(horario.hora_apertura),
+                        'cierre': str(horario.hora_cierre)
+                    } for horario in est.horarios
+                ]
+            } for est in establecimientos
+        ]
+
+        # Preparar el mensaje para la API de OpenAI
+        mensaje = f"""
+        Esta es la información de los establecimientos:
+        {establecimientos_info}
+
+        Pregunta del usuario:
+        {pregunta_usuario}
+        """
+
+        # Realizar la solicitud a la API de OpenAI
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "Eres un asistente virtual que ayuda a los usuarios con información sobre establecimientos."},
+                {"role": "user", "content": mensaje}
+            ]
+        )
+
+        respuesta = response['choices'][0]['message']['content']
+
+        return jsonify({'respuesta': respuesta}), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500
