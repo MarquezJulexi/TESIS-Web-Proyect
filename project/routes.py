@@ -37,7 +37,7 @@ def obtener_establecimientos():
     try:
 
 
-        establecimientos = Establecimiento.query.all()
+        establecimientos = Establecimiento.query.filter_by(eliminado=False).all()
         lista_establecimientos = []
 
         for establecimiento in establecimientos:
@@ -45,8 +45,8 @@ def obtener_establecimientos():
             horarios_json = [
                 {
                     'dia': horario.dia_semana,
-                    'apertura': horario.hora_apertura,
-                    'cierre': horario.hora_cierre
+                    'apertura': horario.hora_apertura.strftime('%H:%M'),  # Convertir a formato de cadena HH:MM
+                    'cierre': horario.hora_cierre.strftime('%H:%M')      # Convertir a formato de cadena HH:MM
                 }
                 for horario in horarios
             ]
