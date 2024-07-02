@@ -3,11 +3,12 @@ import Header from '../components/Header';
 import Map from '../components/Map';
 import EstablecimientosTabla from '../components/EstablecimientosTabla';
 import AgenteVirtual from '../components/AgenteVirtual';
-import { fetchEstablecimientos, preguntarAgenteVirtual } from '../services/api';
+import { fetchEstablecimientos } from '../services/api';
+import './HomePage.css';
 
 const HomePage = () => {
   const [establecimientos, setEstablecimientos] = useState([]);
-  const [respuestaAgente, setRespuestaAgente] = useState('');
+  const [tablaEstablecimiento, setTablaEstablecimiento] = useState(null);
 
   useEffect(() => {
     const fetchEstablecimientosData = async () => {
@@ -19,27 +20,27 @@ const HomePage = () => {
       }
     };
 
-    fetchEstablecimientosData();
+    fetchEstablecimientosData(); // Llama a la función para obtener los establecimientos al cargar la página
   }, []);
 
-  const handlePreguntaAgente = async () => {
-    try {
-      const pregunta = '¿Cuál es el horario de apertura del establecimiento Cafetería Central?';
-      const respuesta = await preguntarAgenteVirtual(pregunta);
-      setRespuestaAgente(respuesta);
-    } catch (error) {
-      console.error('Error preguntando al agente virtual:', error);
-    }
+  const handleEstablecimientoSelect = (establecimiento) => {
+    setTablaEstablecimiento(establecimiento);
   };
 
   return (
-    <div>
+    <div className="homepage">
       <Header />
-      <main>
-        <Map establecimientos={establecimientos} />
-        <EstablecimientosTabla establecimientos={establecimientos} />
-        <AgenteVirtual pregunta={handlePreguntaAgente} respuesta={respuestaAgente} />
-      </main>
+      <div className="main-content">
+        <div className="left-column">
+          <EstablecimientosTabla establecimiento={tablaEstablecimiento} />
+        </div>
+        <div className="right-column">
+          <Map establecimientos={establecimientos} onEstablecimientoSelect={handleEstablecimientoSelect} />
+        </div>
+      </div>
+      <footer className="footer">
+        <AgenteVirtual />
+      </footer>
     </div>
   );
 };

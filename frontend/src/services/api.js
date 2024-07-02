@@ -25,5 +25,47 @@ export const preguntarAgenteVirtual = async (pregunta) => {
     throw error;
   }
 };
+//Funcion para el login
+export const login = async (usuario, contrasena) => {
+  try {
+    console.log(usuario.usuario, usuario.contrasena,'api');
+    const response = await api.post('/login', { usuario:usuario.usuario, contrasena:usuario.contrasena });
+    if (response.data.token) {
+      sessionStorage.setItem('token', response.data.token);
+    }
+    if (response.data.message === 'Login successful') {
+      return response.data;
+    } else {
+      
+      throw new Error('Credenciales incorrectas');
+    }
+  } catch (error) {
+    
+    throw error;
+  }
+};
+
+
+//Función para el logout
+export const logoutAdmin = async () => {
+  try {
+    const response = await api.post('/logout');
+    return response.data;
+  } catch (error) {
+    console.error('Error al cerrar sesión:', error);
+    throw error;
+  }
+};
+
+//Funcion para c  rear establecimientos
+export const crearEstablecimiento = async (datosEstablecimiento) => {
+  try {
+    const response = await api.post('/establecimientos', datosEstablecimiento);
+    return response.data;
+  } catch (error) {
+    console.error('Error al crear establecimiento:', error);
+    throw error;
+  }
+};
 
 export default api;
