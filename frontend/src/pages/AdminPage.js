@@ -4,10 +4,12 @@ import { fetchEstablecimientos, logoutAdmin } from '../services/api';
 import { useNavigate } from 'react-router-dom';
 import CrearEditarEstablecimiento from '../components/CrearEditarEstablecimiento';
 import EstablecimientosLista from '../components/EstablecimientosLista';
+import CambiarContra from '../components/CambiarContra';
 
 const AdminPage = () => {
   const [establecimientos, setEstablecimientos] = useState([]);
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
+  const [mostrarCambio, setMostrarCambio] = useState(false); // inicializar variable que va a tener el mostrar cambiarContra
   const [establecimientoSeleccionado, setEstablecimientoSeleccionado] = useState(null);
   const [mensaje, setMensaje] = useState('');
   const navigate = useNavigate();
@@ -40,10 +42,18 @@ const AdminPage = () => {
     }
   };
 
+  const handleMostrarCambio=async () => {
+    setMostrarCambio(true);
+  };
+  const handleOcultarCambio=async () => {
+    setMostrarCambio(false);
+  };
   const handleToggleFormulario = () => {
+    if (mostrarFormulario) {
+      setEstablecimientoSeleccionado(null); // Reiniciar el estado seleccionado al cerrar el formulario
+    }
     setMostrarFormulario(!mostrarFormulario);
   };
-
   const handleEditEstablecimiento = (establecimiento) => {
     setEstablecimientoSeleccionado(establecimiento);
     setMostrarFormulario(true);
@@ -59,6 +69,10 @@ const AdminPage = () => {
     <div>
       <h1>Gestión de Establecimientos</h1>
       <button onClick={handleLogout}>Cerrar Sesión</button>
+      <button onClick={handleMostrarCambio}>Cambiar Contraseña</button>
+      {mostrarCambio && (
+        <CambiarContra onCancel={handleOcultarCambio} />
+      )}
       <div>
         <button onClick={handleToggleFormulario}>
           {mostrarFormulario ? 'Cancelar' : 'Nuevo Establecimiento'}

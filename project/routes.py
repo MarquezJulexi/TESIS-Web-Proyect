@@ -247,7 +247,8 @@ def obtener_horarios(establecimiento_id):
             return jsonify({'error': 'No se encontraron horarios para el establecimiento especificado.'}), 404
 
         lista_horarios = [
-            {
+            {   
+                'horario.id':horario.id,
                 'dia': horario.dia_semana,
                 'apertura': horario.hora_apertura.strftime('%H:%M'),  # Convertir a formato de cadena HH:MM
                 'cierre': horario.hora_cierre.strftime('%H:%M')      # Convertir a formato de cadena HH:MM

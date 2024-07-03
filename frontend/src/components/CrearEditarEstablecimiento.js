@@ -11,6 +11,7 @@ const CrearEditarEstablecimiento = ({ establecimiento, onSuccess, handleToggleFo
   const [descripcion, setDescripcion] = useState('');
   const [tipo, setTipo] = useState('');
   const [error, setError] = useState(''); // Aquí se define el estado y la función setError
+  const [mostrarHorarios, setMostrarHorarios] = useState(false);
 
   useEffect(() => {
     if (establecimiento) {
@@ -45,6 +46,10 @@ const CrearEditarEstablecimiento = ({ establecimiento, onSuccess, handleToggleFo
     }
   };
 
+  const handleToggleHorarios = () => {
+    setMostrarHorarios(!mostrarHorarios);
+  };
+
   return (
     <div>
       
@@ -57,7 +62,18 @@ const CrearEditarEstablecimiento = ({ establecimiento, onSuccess, handleToggleFo
       <input type="text" placeholder="Descripción" value={descripcion} onChange={(e) => setDescripcion(e.target.value)} />
       <input type="text" placeholder="Tipo" value={tipo} onChange={(e) => setTipo(e.target.value)} />
       <button onClick={handleGuardarEstablecimiento}>{establecimiento ? 'Editar' : 'Crear'} Establecimiento</button>
-      {establecimiento && <CrearEditarHorarios establecimientoId={establecimiento.id} />}
+      {establecimiento && (
+        <>
+          {!mostrarHorarios ? (
+            <button onClick={handleToggleHorarios}>Añadir Horario</button>
+          ) : (
+            <>
+              <CrearEditarHorarios establecimientoId={establecimiento.id} />
+              <button onClick={handleToggleHorarios}>Cancelar</button>
+            </>
+          )}
+        </>
+      )}
     </div>
   );
 };

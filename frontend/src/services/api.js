@@ -133,5 +133,13 @@ export const obtenerHorarios = async (establecimientoId) => {
     throw error;
   }
 };
-
+export const cambiarContrasena = async (data) => {
+  try {
+    const response = await api.put('admin/password', data);
+    return response.data; // Devuelve el mensaje de éxito desde el backend
+  } catch (error) {
+    console.error('Error al cambiar la contraseña:', error);
+    throw error; // Lanza el error para ser manejado en el componente
+  }
+};
 export default api;
