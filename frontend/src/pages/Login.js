@@ -12,7 +12,7 @@ const LoginPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-        console.log(usuario,contrasena,'login')
+      console.log(usuario,contrasena,'login');
       await login({ usuario, contrasena });
       sessionStorage.setItem('authenticated', 'true');
       navigate('/admin');

@@ -18,7 +18,7 @@ def create_app(config_class=Config):
     db.init_app(app)
     migrate.init_app(app, db)
     sess.init_app(app)
-    CORS(app, resources={r"/api/*": {"origins": "http://localhost:3000"}})
+    CORS(app,supports_credentials=True, resources={r"/api/*": {"origins": "http://localhost:3000"}})
     with app.app_context():
         from . import routes
         app.register_blueprint(routes.bp,url_prefix='/api')

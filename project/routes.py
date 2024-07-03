@@ -75,6 +75,10 @@ def add_establecimiento():
 
         data = request.get_json()
         nombre = data.get('nombre')
+        # Verificar si el nombre ya existe
+        if Establecimiento.query.filter_by(nombre=nombre).first():
+            return jsonify({'message': 'Establecimiento con este nombre ya existe'}), 409
+        
         direccion = data.get('direccion')
         tipo = data.get('tipo')
         latitud = data.get('latitud')
@@ -99,7 +103,7 @@ def add_establecimiento():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-#ruta para actualizar la
+#ruta para actualizar un establecimiento
 @bp.route('/establecimientos/<int:id>', methods=['PUT'])
 def edit_establecimiento(id):
     try:
@@ -110,7 +114,7 @@ def edit_establecimiento(id):
         establecimiento = Establecimiento.query.filter_by(id=id, administrador_id=session['admin_id']).first()
 
         if establecimiento is None:
-            return jsonify({'message': 'Establecimiento not found'}), 404
+            return jsonify({'message': 'Establecimiento no encontrado'}), 404
 
         establecimiento.nombre = data.get('nombre', establecimiento.nombre)
         establecimiento.direccion = data.get('direccion', establecimiento.direccion)
@@ -124,7 +128,7 @@ def edit_establecimiento(id):
         return jsonify({'message': 'Establecimiento updated successfully'}), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500
-
+#actualizar un establecimiento a eliminado
 @bp.route('/eliminar_establecimiento/<int:id>', methods=['PUT'])
 def actualizar_estado_establecimiento(id):
     try:
@@ -141,10 +145,10 @@ def actualizar_estado_establecimiento(id):
         establecimiento.eliminado = eliminado
         db.session.commit()
 
-        return jsonify({'message': 'Estado de eliminación actualizado correctamente'}), 200
+        return jsonify({'message': 'Establecimiento eliminado correctamente'}), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500
-
+#agregar un horario a un establecimiento
 @bp.route('/establecimientos/<int:establecimiento_id>/horarios', methods=['POST'])
 def add_horario(establecimiento_id):
     try:
@@ -170,6 +174,7 @@ def add_horario(establecimiento_id):
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+#actualizar un horario
 @bp.route('/horarios/<int:id>', methods=['PUT'])
 def edit_horario(id):
     try:
@@ -194,6 +199,7 @@ def edit_horario(id):
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+#eliminar un horario
 @bp.route('/horarios/<int:id>', methods=['DELETE'])
 def delete_horario(id):
     try:
@@ -229,6 +235,28 @@ def update_password():
         db.session.commit()
 
         return jsonify({'message': 'Password updated successfully'}), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    
+#Mostrar los horarios de un establecimiento
+@bp.route('/establecimientos/<int:establecimiento_id>/horarios', methods=['GET'])
+def obtener_horarios(establecimiento_id):
+    try:
+        horarios = Horario.query.filter_by(establecimiento_id=establecimiento_id).all()
+        if not horarios:
+            return jsonify({'error': 'No se encontraron horarios para el establecimiento especificado.'}), 404
+
+        lista_horarios = [
+            {
+                'dia': horario.dia_semana,
+                'apertura': horario.hora_apertura.strftime('%H:%M'),  # Convertir a formato de cadena HH:MM
+                'cierre': horario.hora_cierre.strftime('%H:%M')      # Convertir a formato de cadena HH:MM
+            }
+            for horario in horarios
+        ]
+
+        return jsonify(lista_horarios), 200
+
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 

@@ -8,12 +8,26 @@ import EstablecimientosLista from '../components/EstablecimientosLista';
 const AdminPage = () => {
   const [establecimientos, setEstablecimientos] = useState([]);
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
+  const [establecimientoSeleccionado, setEstablecimientoSeleccionado] = useState(null);
+  const [mensaje, setMensaje] = useState('');
   const navigate = useNavigate();
 
-  useEffect(() => {
+  /*useEffect(() => {
     fetchEstablecimientos()
       .then(data => setEstablecimientos(data))
       .catch(error => console.error('Error fetching establecimientos:', error));
+  }, []);*/
+  const fetchAndSetEstablecimientos = async () => {
+    try {
+      const data = await fetchEstablecimientos();
+      setEstablecimientos(data);
+    } catch (error) {
+      console.error('Error fetching establecimientos:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchAndSetEstablecimientos();
   }, []);
 
   const handleLogout = async () => {
@@ -30,6 +44,17 @@ const AdminPage = () => {
     setMostrarFormulario(!mostrarFormulario);
   };
 
+  const handleEditEstablecimiento = (establecimiento) => {
+    setEstablecimientoSeleccionado(establecimiento);
+    setMostrarFormulario(true);
+  };
+
+  const mostrarMensajeTemporal = (msg) => {
+    setMensaje(msg);
+    setTimeout(() => {
+      setMensaje('');
+    }, 3000); // El mensaje desaparece después de 3 segundos
+  };
   return (
     <div>
       <h1>Gestión de Establecimientos</h1>
@@ -38,9 +63,21 @@ const AdminPage = () => {
         <button onClick={handleToggleFormulario}>
           {mostrarFormulario ? 'Cancelar' : 'Nuevo Establecimiento'}
         </button>
-        {mostrarFormulario && <CrearEditarEstablecimiento />}
+        {mostrarFormulario && <CrearEditarEstablecimiento 
+        establecimiento={establecimientoSeleccionado}
+        onSuccess={fetchAndSetEstablecimientos} 
+        handleToggleFormulario={handleToggleFormulario} />}
       </div>
-      <EstablecimientosLista establecimientos={establecimientos} />
+      {mensaje && <p>{mensaje}</p>}
+      <div>
+        <EstablecimientosLista 
+          establecimientos={establecimientos} 
+          onEdit={handleEditEstablecimiento} 
+          onEliminar={fetchAndSetEstablecimientos}
+          mostrarMensaje={mostrarMensajeTemporal}
+        />
+      </div>
+      
     </div>
   );
 };
