@@ -2,8 +2,9 @@
 import React, { useState, useEffect } from 'react';
 import { agregarHorario, actualizarHorario, obtenerHorarios } from '../services/api';
 import ListarHorarios from './ListarHorarios';
+import './css/CrearEditarHorarios.css';
 
-const CrearEditarHorarios = ({ establecimientoId }) => {
+const CrearEditarHorarios = ({ establecimientoId, onCancel }) => {
   const [horarios, setHorarios] = useState([]);
   const [diaSemana, setDiaSemana] = useState('');
   const [horaApertura, setHoraApertura] = useState('');
@@ -65,6 +66,15 @@ useEffect(() => {
 
 
   const handleSubmit = () => {
+    if (!diaSemana || !horaApertura || !horaCierre) {
+      setError('Por favor complete todos los campos obligatorios.');
+      return;
+    }
+
+    if (horaApertura >= horaCierre) {
+      setError('La hora de apertura debe ser menor que la hora de cierre.');
+      return;
+    }
     if (horarioActual) {
       handleActualizarHorario();
     } else {
@@ -74,6 +84,7 @@ useEffect(() => {
     setHoraApertura('');
     setHoraCierre('');
     setHorarioActual(null);
+    setError('');
   };
 
   const handleEdit = (horario) => {
@@ -86,32 +97,48 @@ useEffect(() => {
 
 
   return (
-    <div>
+    <div className="ceh-popup">
       <h3>Horarios</h3>
       {mensaje && <p>{mensaje}</p>}
-      <input
-        type="text"
-        placeholder="Día de la Semana"
+      {error && <p className="ceh-error-message">{error}</p>}
+      <select
         value={diaSemana}
         onChange={(e) => setDiaSemana(e.target.value)}
-      />
+        className="ceh-input"
+      >
+        <option value="">Selecciona día de la semana</option>
+        <option value="Lunes">Lunes</option>
+        <option value="Martes">Martes</option>
+        <option value="Miércoles">Miércoles</option>
+        <option value="Jueves">Jueves</option>
+        <option value="Viernes">Viernes</option>
+        <option value="Sábado">Sábado</option>
+        <option value="Domingo">Domingo</option>
+      </select>
       <input
-        type="text"
-        placeholder="Hora de Apertura"
+        type="time"
         value={horaApertura}
         onChange={(e) => setHoraApertura(e.target.value)}
+        className="ceh-input"
+        required
       />
       <input
-        type="text"
-        placeholder="Hora de Cierre"
+        type="time"
         value={horaCierre}
         onChange={(e) => setHoraCierre(e.target.value)}
+        className="ceh-input"
+        required
       />
-      <button onClick={handleSubmit}>
+      <button onClick={handleSubmit} className="ceh-button">
         {horarioActual ? 'Actualizar Horario' : 'Agregar Horario'}
       </button>
 
-      <ListarHorarios horarios={horarios} onEdit={handleEdit} fetchHorarios={fetchHorarios}  error={error}/>
+      <div className="ceh-container">
+        <ListarHorarios horarios={horarios} onEdit={handleEdit} fetchHorarios={fetchHorarios} error={error} />
+      </div>
+
+      <button onClick={onCancel} className="ceh-button ceh-button-secondary">Cerrar</button>
+      
     </div>
   );
 };

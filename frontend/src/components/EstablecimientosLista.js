@@ -1,6 +1,7 @@
 // src/components/EstablecimientosLista.js
 import React from 'react';
 import { eliminarEstablecimiento } from '../services/api';
+import './css/EstablecimientosLista.css';
 
 const EstablecimientosLista = ({ establecimientos, onEdit, onEliminar, mostrarMensaje  }) => {
   const handleEliminar = async (id) => {
@@ -14,17 +15,16 @@ const EstablecimientosLista = ({ establecimientos, onEdit, onEliminar, mostrarMe
     }
   };
   return (
-    <div>
+    <div className="el-container">
       {establecimientos.map(est => (
-        <div key={est.id}>
-          <h2>{est.nombre}</h2>
-          <p>{est.direccion}</p>
-          <button onClick={() => onEdit(est) }>Editar</button>
-          <button onClick={() => handleEliminar(est.id)}>Eliminar</button>
+        <div key={est.id} className="el-item">
+          <h2 className="el-title">{est.nombre}</h2>
+          <p className="el-address">{est.direccion}</p>
+          <button onClick={() => onEdit(est)} className="el-button el-button-edit">Editar</button>
+          <button onClick={() => handleEliminar(est.id)} className="el-button el-button-delete">Eliminar</button>
         </div>
       ))}
     </div>
   );
 };
-
 export default EstablecimientosLista;

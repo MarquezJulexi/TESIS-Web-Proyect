@@ -1,6 +1,7 @@
 // src/components/ListarHorarios.js
 import React from 'react';
 import {eliminarHorario} from '../services/api';
+import './css/ListarHorarios.css';
 
 const ListarHorarios = ({ horarios, onEdit, fetchHorarios, error }) => {
     const handleEliminarHorario = async (id) => {
@@ -15,17 +16,16 @@ const ListarHorarios = ({ horarios, onEdit, fetchHorarios, error }) => {
       };
     return (
       <div>
-        
-        {horarios.length === 0 && <p>No hay horarios disponibles. Agrega uno.</p>}
-        {horarios.map((horario) => (
-            <div key={horario['horario.id']}>
-            <p>{horario.dia}: {horario.apertura} - {horario.cierre}</p>
-            <button onClick={() => onEdit(horario)}>Editar</button>
-            <button onClick={() => handleEliminarHorario(horario['horario.id'])}>Eliminar</button>
-            </div>
-        ))}
+      {horarios.length === 0 && <p>No hay horarios disponibles. Agrega uno.</p>}
+      {horarios.map((horario) => (
+        <div key={horario['horario.id']} className="lh-item">
+          <p>{horario.dia}: {horario.apertura} - {horario.cierre}</p>
+          <button onClick={() => onEdit(horario)} className="lh-button-edit">Editar</button>
+          <button onClick={() => handleEliminarHorario(horario['horario.id'])} className="lh-button-delete">Eliminar</button>
         </div>
-    );
-  };
+      ))}
+    </div>
+  );
+};
 
 export default ListarHorarios;

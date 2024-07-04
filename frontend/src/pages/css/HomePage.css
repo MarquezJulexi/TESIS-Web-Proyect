@@ -1,0 +1,54 @@
+/* src/pages/css/HomePage.css */
+
+.hp-homepage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+.hp-header {
+  width: 100%;
+  text-align: center;
+  padding: 15px;
+  border-radius: 10px;
+  background-color: #f5f5f5;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.hp-main-content {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1200px;
+}
+
+.hp-left-column, .hp-right-column {
+  flex: 1;
+  padding: 15px;
+  margin: 10px;
+  border-radius: 10px;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow: auto;
+}
+
+.hp-left-column {
+  margin-right: 20px;
+}
+
+.hp-right-column {
+  margin-left: 20px;
+}
+
+.hp-agent-container {
+  margin-top: 20px;
+  padding: 15px;
+  border-radius: 10px;
+  background-color: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 800px;
+  text-align: center;
+}

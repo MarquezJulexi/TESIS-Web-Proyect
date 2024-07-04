@@ -4,7 +4,7 @@ import Map from '../components/Map';
 import EstablecimientosTabla from '../components/EstablecimientosTabla';
 import AgenteVirtual from '../components/AgenteVirtual';
 import { fetchEstablecimientos } from '../services/api';
-import './HomePage.css';
+import './css/HomePage.css';
 
 const HomePage = () => {
   const [establecimientos, setEstablecimientos] = useState([]);
@@ -28,19 +28,21 @@ const HomePage = () => {
   };
 
   return (
-    <div className="homepage">
-      <Header />
-      <div className="main-content">
-        <div className="left-column">
+    <div className="hp-homepage">
+      <header className="hp-header">
+        <Header />
+      </header>
+      <div className="hp-main-content">
+        <div className="hp-left-column">
           <EstablecimientosTabla establecimiento={tablaEstablecimiento} />
         </div>
-        <div className="right-column">
+        <div className="hp-right-column">
           <Map establecimientos={establecimientos} onEstablecimientoSelect={handleEstablecimientoSelect} />
         </div>
       </div>
-      <footer className="footer">
+      <div className="hp-agent-container">
         <AgenteVirtual />
-      </footer>
+      </div>
     </div>
   );
 };

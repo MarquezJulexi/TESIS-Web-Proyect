@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import CrearEditarEstablecimiento from '../components/CrearEditarEstablecimiento';
 import EstablecimientosLista from '../components/EstablecimientosLista';
 import CambiarContra from '../components/CambiarContra';
+import './css/AdminPage.css';
 
 const AdminPage = () => {
   const [establecimientos, setEstablecimientos] = useState([]);
@@ -48,11 +49,13 @@ const AdminPage = () => {
   const handleOcultarCambio=async () => {
     setMostrarCambio(false);
   };
-  const handleToggleFormulario = () => {
-    if (mostrarFormulario) {
-      setEstablecimientoSeleccionado(null); // Reiniciar el estado seleccionado al cerrar el formulario
-    }
-    setMostrarFormulario(!mostrarFormulario);
+  const mostrarFormularioCrear = () => {
+    setEstablecimientoSeleccionado(null); // Reiniciar el estado seleccionado al abrir el formulario
+    setMostrarFormulario(true);
+  };
+
+  const cerrarFormulario = () => {
+    setMostrarFormulario(false);
   };
   const handleEditEstablecimiento = (establecimiento) => {
     setEstablecimientoSeleccionado(establecimiento);
@@ -66,24 +69,48 @@ const AdminPage = () => {
     }, 3000); // El mensaje desaparece después de 3 segundos
   };
   return (
-    <div>
-      <h1>Gestión de Establecimientos</h1>
-      <button onClick={handleLogout}>Cerrar Sesión</button>
-      <button onClick={handleMostrarCambio}>Cambiar Contraseña</button>
-      {mostrarCambio && (
-        <CambiarContra onCancel={handleOcultarCambio} />
-      )}
-      <div>
-        <button onClick={handleToggleFormulario}>
-          {mostrarFormulario ? 'Cancelar' : 'Nuevo Establecimiento'}
+    <div className="admin-container">
+      <header className="admin-header">
+        <h1>Gestión de Establecimientos</h1>
+        <div className="admin-header-buttons">
+          <button onClick={handleLogout}>Cerrar Sesión</button>
+          <button onClick={handleMostrarCambio}>Cambiar Contraseña</button>
+        </div>
+      </header>
+
+      <div className="admin-content">
+        <button className="btn-nuevo" onClick={mostrarFormularioCrear}>
+          Nuevo Establecimiento
         </button>
-        {mostrarFormulario && <CrearEditarEstablecimiento 
-        establecimiento={establecimientoSeleccionado}
-        onSuccess={fetchAndSetEstablecimientos} 
-        handleToggleFormulario={handleToggleFormulario} />}
+        {mostrarFormulario && (
+          <>
+            <div className="backdrop" onClick={cerrarFormulario}></div>
+            <div className="popup">
+              <div className="popup-content">
+                <CrearEditarEstablecimiento
+                  onCancel={cerrarFormulario}
+                  establecimiento={establecimientoSeleccionado}
+                  onSuccess={fetchAndSetEstablecimientos}
+                />
+                {mensaje && <p className='ad-p'>{mensaje}</p>}
+              </div>
+            </div>
+          </>
+        )}
       </div>
-      {mensaje && <p>{mensaje}</p>}
-      <div>
+      
+      {mostrarCambio && (
+        <>
+          <div className="backdrop" onClick={handleOcultarCambio}></div>
+          <div className="popup">
+            <div className="popup-content">
+              <CambiarContra onCancel={handleOcultarCambio} />
+            </div>
+          </div>
+        </>
+      )}
+      
+      <div className="establecimientos-lista-container">
         <EstablecimientosLista 
           establecimientos={establecimientos} 
           onEdit={handleEditEstablecimiento} 
@@ -91,8 +118,8 @@ const AdminPage = () => {
           mostrarMensaje={mostrarMensajeTemporal}
         />
       </div>
-      
     </div>
+
   );
 };
 

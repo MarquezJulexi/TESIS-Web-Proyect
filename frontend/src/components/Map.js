@@ -1,7 +1,7 @@
 // src/components/Map.js
 import React, { useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, ZoomControl } from 'react-leaflet';
-import './Map.css'; 
+import './css/Map.css'; 
 import L from 'leaflet';
   // Crear el icono con el emoji 🍽️
   const emojiIcon = L.divIcon({

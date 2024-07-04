@@ -1,7 +1,7 @@
 // src/components/AgenteVirtual.js
 import React, { useState } from 'react';
 import api from '../services/api';
-import './AgenteVirtual.css';
+import './css/AgenteVirtual.css';
 const AgenteVirtual = () => {
     const [mensajeUsuario, setMensajeUsuario] = useState('');
     const [mensajesChat, setMensajesChat] = useState([]);
