@@ -35,10 +35,19 @@ const Map = ({ establecimientos, onEstablecimientoSelect }) => {
             
           >
             <Popup>
-              <div onClick={() => handleEstablecimientoClick(establecimiento)}>
-                <h2 >Nombre: {establecimiento.nombre}</h2>
-                <p>Dirección: {establecimiento.direccion}</p>
-                <p>Tipo: {establecimiento.tipo}</p>
+            <div className="mp-popup-content" onClick={() => handleEstablecimientoClick(establecimiento)}>
+                <div className="mp-popup-section">
+                  <h2 className="mp-popup-title">Nombre</h2>
+                  <p className="mp-popup-text">{establecimiento.nombre}</p>
+                </div>
+                <div className="mp-popup-section">
+                  <h2 className="mp-popup-title">Dirección</h2>
+                  <p className="mp-popup-text">{establecimiento.direccion}</p>
+                </div>
+                <div className="mp-popup-section">
+                  <h2 className="mp-popup-title">Tipo</h2>
+                  <p className="mp-popup-text">{establecimiento.tipo}</p>
+                </div>
               </div>
             </Popup>
           </Marker>

@@ -1,11 +1,12 @@
 // src/components/EstablecimientosTabla.js
 import React from 'react';
+import './css/EstablecimientosTabla.css';
 
 const EstablecimientosTabla = ({ establecimiento }) => {
   if (!establecimiento) {
     return (
       <div>
-        <h2>Selecciona un establecimiento para ver detalles</h2>
+        <h2>Da clic sobre un globo para mostrar sus detalles</h2>
       </div>
     );
   }
@@ -13,34 +14,36 @@ const EstablecimientosTabla = ({ establecimiento }) => {
   const { nombre, direccion, descripcion, tipo, horarios } = establecimiento;
 
   return (
-    <div>
+    <div className="el-detalles">
       <h2>Detalles del Establecimiento</h2>
-      <table>
+      <table className="el-table">
         <tbody>
           <tr>
-            <td>Nombre:</td>
-            <td>{nombre}</td>
+            <td className="el-table-header">Nombre:</td>
+            <td className="el-table-value">{nombre}</td>
           </tr>
           <tr>
-            <td>Dirección:</td>
-            <td>{direccion}</td>
+            <td className="el-table-header">Dirección:</td>
+            <td className="el-table-value">{direccion}</td>
           </tr>
           <tr>
-            <td>Descripción:</td>
-            <td>{descripcion}</td>
+            <td className="el-table-header">Descripción:</td>
+            <td className="el-table-value">{descripcion}</td>
           </tr>
           <tr>
-            <td>Tipo:</td>
-            <td>{tipo}</td>
+            <td className="el-table-header">Tipo:</td>
+            <td className="el-table-value">{tipo}</td>
           </tr>
           <tr>
-            <td>Horarios:</td>
-            <td>
-              {horarios.map((horario, index) => (
-                <div key={index}>
-                  {horario.dia}, desde {horario.apertura} hasta {horario.cierre}
-                </div>
-              ))}
+            <td className="el-table-header">Horarios:</td>
+            <td className="el-table-value">
+              <div className="el-horarios-container">
+                {horarios.map((horario, index) => (
+                  <div key={index} className="el-horario">
+                    {horario.dia}, desde {horario.apertura} hasta {horario.cierre}
+                  </div>
+                ))}
+              </div>
             </td>
           </tr>
         </tbody>
