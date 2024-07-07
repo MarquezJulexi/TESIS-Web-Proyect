@@ -1,12 +1,24 @@
 // src/components/CrearEditarHorarios.js
 import React, { useState, useEffect } from 'react';
+import Select from 'react-select';
 import { agregarHorario, actualizarHorario, obtenerHorarios } from '../services/api';
 import ListarHorarios from './ListarHorarios';
 import './css/CrearEditarHorarios.css';
 
+
+
+const diaOptions = [
+  { value: 'Lunes', label: 'Lunes' },
+  { value: 'Martes', label: 'Martes' },
+  { value: 'Miércoles', label: 'Miércoles' },
+  { value: 'Jueves', label: 'Jueves' },
+  { value: 'Viernes', label: 'Viernes' },
+  { value: 'Sábado', label: 'Sábado' },
+  { value: 'Domingo', label: 'Domingo' }
+];
 const CrearEditarHorarios = ({ establecimientoId, onCancel }) => {
   const [horarios, setHorarios] = useState([]);
-  const [diaSemana, setDiaSemana] = useState('');
+  const [diaSemana, setDiaSemana] = useState(null);
   const [horaApertura, setHoraApertura] = useState('');
   const [horaCierre, setHoraCierre] = useState('');
   const [horarioActual, setHorarioActual] = useState(null);
@@ -42,7 +54,7 @@ useEffect(() => {
 
   const handleAgregarHorario = async () => {
     try {
-      await agregarHorario(establecimientoId, { dia_semana: diaSemana, hora_apertura: horaApertura, hora_cierre: horaCierre });
+      await agregarHorario(establecimientoId, { dia_semana: diaSemana.value, hora_apertura: horaApertura, hora_cierre: horaCierre });
       await fetchHorarios();
       mostrarMensajeTemporal('Horario agregado exitosamente');
     } catch (error) {
@@ -54,7 +66,7 @@ useEffect(() => {
   const handleActualizarHorario = async () => {
     try {
       console.log(horarioActual);
-      await actualizarHorario(horarioActual['horario.id'], { dia_semana: diaSemana, hora_apertura: horaApertura, hora_cierre: horaCierre });
+      await actualizarHorario(horarioActual['horario.id'], { dia_semana: diaSemana.value, hora_apertura: horaApertura, hora_cierre: horaCierre });
       await fetchHorarios();
       mostrarMensajeTemporal('Horario actualizado exitosamente');
     } catch (error) {
@@ -80,7 +92,7 @@ useEffect(() => {
     } else {
       handleAgregarHorario();
     }
-    setDiaSemana('');
+    setDiaSemana(null);
     setHoraApertura('');
     setHoraCierre('');
     setHorarioActual(null);
@@ -89,7 +101,7 @@ useEffect(() => {
 
   const handleEdit = (horario) => {
     setHorarioActual(horario);
-    setDiaSemana(horario.dia || '');
+    setDiaSemana(diaOptions.find(option => option.value === horario.dia) || null);
     setHoraApertura(horario.apertura || '');
     setHoraCierre(horario.cierre || '');
   };
@@ -101,20 +113,15 @@ useEffect(() => {
       <h3>Horarios</h3>
       {mensaje && <p>{mensaje}</p>}
       {error && <p className="ceh-error-message">{error}</p>}
-      <select
+      <label>Día:</label>
+      <Select
         value={diaSemana}
-        onChange={(e) => setDiaSemana(e.target.value)}
-        className="ceh-input"
-      >
-        <option value="">Selecciona día de la semana</option>
-        <option value="Lunes">Lunes</option>
-        <option value="Martes">Martes</option>
-        <option value="Miércoles">Miércoles</option>
-        <option value="Jueves">Jueves</option>
-        <option value="Viernes">Viernes</option>
-        <option value="Sábado">Sábado</option>
-        <option value="Domingo">Domingo</option>
-      </select>
+        onChange={(selectedOption) => setDiaSemana(selectedOption)}
+        options={diaOptions}
+        className="ceh-select"
+        placeholder="Selecciona día de la semana"
+      />
+      <label>Hora de Apertura:</label>
       <input
         type="time"
         value={horaApertura}
@@ -122,6 +129,7 @@ useEffect(() => {
         className="ceh-input"
         required
       />
+      <label>Hora de Cierre:</label>
       <input
         type="time"
         value={horaCierre}

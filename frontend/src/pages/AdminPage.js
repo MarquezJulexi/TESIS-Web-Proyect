@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import CrearEditarEstablecimiento from '../components/CrearEditarEstablecimiento';
 import EstablecimientosLista from '../components/EstablecimientosLista';
 import CambiarContra from '../components/CambiarContra';
+import MapaUno from '../components/MapUno';
 import './css/AdminPage.css';
 
 const AdminPage = () => {
@@ -92,13 +93,13 @@ const AdminPage = () => {
                   establecimiento={establecimientoSeleccionado}
                   onSuccess={fetchAndSetEstablecimientos}
                 />
-                {mensaje && <p className='ad-p'>{mensaje}</p>}
+                {mensaje && <p className="ad-p">{mensaje}</p>}
               </div>
             </div>
           </>
         )}
       </div>
-      
+
       {mostrarCambio && (
         <>
           <div className="backdrop" onClick={handleOcultarCambio}></div>
@@ -109,18 +110,21 @@ const AdminPage = () => {
           </div>
         </>
       )}
-      
-      <div className="establecimientos-lista-container">
-        <EstablecimientosLista 
-          establecimientos={establecimientos} 
-          onEdit={handleEditEstablecimiento} 
-          onEliminar={fetchAndSetEstablecimientos}
-          mostrarMensaje={mostrarMensajeTemporal}
-        />
+
+      <div className="admin-main-content">
+        <div className="admin-establecimientos-lista-container">
+          <EstablecimientosLista
+            establecimientos={establecimientos}
+            onEdit={handleEditEstablecimiento}
+            onEliminar={fetchAndSetEstablecimientos}
+            mostrarMensaje={mostrarMensajeTemporal}
+          />
+        </div>
+        <div className="admin-mapa-container">
+          <MapaUno establecimientos={establecimientos} />
+        </div>
       </div>
-
     </div>
-
   );
 };
 

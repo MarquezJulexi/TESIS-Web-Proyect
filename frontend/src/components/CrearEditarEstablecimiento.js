@@ -1,8 +1,26 @@
 // src/components/CrearEditarEstablecimiento.js
 import React, { useState, useEffect  } from 'react';
+import Select from 'react-select';
 import { crearEstablecimiento, actualizarEstablecimiento  } from '../services/api';
 import CrearEditarHorarios from '../components/CrearEditarHorarios';
 import './css/CrearEditarEstablecimiento.css';
+
+
+
+const options = [
+  { value: 'cevicheria', label: 'Cevichería' },
+  { value: 'panaderia', label: 'Panadería' },
+  { value: 'hueca', label: 'Hueca (pequeños establecimientos locales)' },
+  { value: 'picanteria', label: 'Picantería (especializada en platos típicos y picantes)' },
+  { value: 'marisqueria', label: 'Marisquería' },
+  { value: 'comida_rapida', label: 'Comida rápida' },
+  { value: 'chifa', label: 'Chifa (comida china adaptada al gusto local)' },
+  { value: 'asadero_de_pollos', label: 'Asadero de pollos' },
+  { value: 'heladeria_artesanal', label: 'Heladería artesanal' },
+  { value: 'restaurante', label: 'Restaurante' },
+  { value: 'bar', label: 'Bar' },
+  { value: 'cafeteria', label: 'Cafetería' }
+];
 
 const CrearEditarEstablecimiento = ({ establecimiento, onSuccess, onCancel  }) => {
   const [nombre, setNombre] = useState('');
@@ -21,7 +39,7 @@ const CrearEditarEstablecimiento = ({ establecimiento, onSuccess, onCancel  }) =
       setLatitud(establecimiento.latitud);
       setLongitud(establecimiento.longitud);
       setDescripcion(establecimiento.descripcion);
-      setTipo(establecimiento.tipo);
+      setTipo(options.find(option => option.value === establecimiento.tipo));
     }
   }, [establecimiento]);
 
@@ -67,12 +85,24 @@ const CrearEditarEstablecimiento = ({ establecimiento, onSuccess, onCancel  }) =
       <div className="ce-crearEditarEstablecimiento">
         <h2>{establecimiento ? 'Editar' : 'Crear'} Establecimiento</h2>
         {error && <p className="ce-error-message">{error}</p>}
+        <label>Nombre:</label>
         <input type="text" placeholder="Nombre *" value={nombre} onChange={(e) => setNombre(e.target.value)} />
+        <label>Tipo de Establecimiento:</label>
+        <Select 
+          className='ce-select'
+          value={tipo} 
+          onChange={(selectedOption) => setTipo(selectedOption)}
+          options={options} 
+          placeholder="Tipo"
+        />
+        <label>Dirección:</label>
         <input type="text" placeholder="Dirección *" value={direccion} onChange={(e) => setDireccion(e.target.value)} />
+        <label>Latitud:</label>
         <input type="text" placeholder="Latitud *" value={latitud} onChange={(e) => setLatitud(e.target.value)} />
+        <label>Longitud:</label>
         <input type="text" placeholder="Longitud *" value={longitud} onChange={(e) => setLongitud(e.target.value)} />
+        <label>Descripción:</label>
         <input type="text" placeholder="Descripción" value={descripcion} onChange={(e) => setDescripcion(e.target.value)} />
-        <input type="text" placeholder="Tipo" value={tipo} onChange={(e) => setTipo(e.target.value)} />
         <button className="ce-button-primary" onClick={handleGuardarEstablecimiento}>{establecimiento ? 'Editar' : 'Crear'} Establecimiento</button>
         <button className="ce-button-secondary" onClick={onCancel}>Cancelar</button>
         {establecimiento && (

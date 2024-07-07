@@ -25,6 +25,22 @@
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
+    color: #666;
+  }
+  .ce-crearEditarEstablecimiento label {
+    display: block;
+    margin-bottom: 5px;
+    color: #666;
+  }
+  .ce-crearEditarEstablecimiento option {
+    display: block;
+    margin-bottom: 5px;
+    color: #666;
+  }
+  .ce-select{
+    display: block;
+    margin-bottom: 5px;
+    color: #666;
   }
   
   .ce-crearEditarEstablecimiento .ce-button-primary {
