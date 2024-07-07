@@ -15,8 +15,9 @@ const LoginPage = () => {
     try {
       console.log(usuario,contrasena,'login');
       await login({ usuario, contrasena });
-      sessionStorage.setItem('authenticated', 'true');
       navigate('/admin');
+      sessionStorage.setItem('authenticated', 'true');
+      
     } catch (error) {
       setError('Credenciales inválidas. Por favor, inténtalo de nuevo.');
     }

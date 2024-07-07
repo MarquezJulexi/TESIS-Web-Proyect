@@ -263,6 +263,55 @@ def obtener_horarios(establecimiento_id):
 
 openai.api_key =current_app.config['OPENAI_API_KEY']
 
+# @bp.route('/preguntar', methods=['POST'])
+# def preguntar_openai():
+#     try:
+#         data = request.get_json()
+#         pregunta_usuario = data.get('pregunta')
+
+#         # Obtener los establecimientos de la base de datos
+#         establecimientos = Establecimiento.query.all()
+#         establecimientos_info = [
+#             {
+#                 'nombre': est.nombre,
+#                 'direccion': est.direccion,
+#                 'latitud': str(est.latitud),
+#                 'longitud': str(est.longitud),
+#                 'descripcion': est.descripcion,
+#                 'tipo': est.tipo,
+#                 'horarios': [
+#                     {
+#                         'dia': horario.dia_semana,
+#                         'apertura': str(horario.hora_apertura),
+#                         'cierre': str(horario.hora_cierre)
+#                     } for horario in est.horarios
+#                 ]
+#             } for est in establecimientos
+#         ]
+
+#         # Preparar el mensaje para la API de OpenAI
+#         mensaje = f"""
+#         Esta es la información de los establecimientos:
+#         {establecimientos_info}
+
+#         Pregunta del usuario:
+#         {pregunta_usuario}
+#         """
+
+#         # Realizar la solicitud a la API de OpenAI
+#         response = openai.ChatCompletion.create(
+#             model="gpt-3.5-turbo",
+#             messages=[
+#                 {"role": "system", "content": "Eres un asistente virtual que ayuda a los usuarios con información sobre establecimientos."},
+#                 {"role": "user", "content": mensaje}
+#             ]
+#         )
+
+#         respuesta = response['choices'][0]['message']['content']
+
+#         return jsonify({'respuesta': respuesta}), 200
+#     except Exception as e:
+#         return jsonify({'error': str(e)}), 500
 @bp.route('/preguntar', methods=['POST'])
 def preguntar_openai():
     try:
@@ -289,25 +338,29 @@ def preguntar_openai():
             } for est in establecimientos
         ]
 
-        # Preparar el mensaje para la API de OpenAI
-        mensaje = f"""
-        Esta es la información de los establecimientos:
-        {establecimientos_info}
+        # Inicializar el historial de mensajes si no existe
+        if 'chat_history' not in session:
+            session['chat_history'] = []
 
-        Pregunta del usuario:
-        {pregunta_usuario}
-        """
+        # Añadir el mensaje del usuario al historial
+        session['chat_history'].append({"role": "user", "content": pregunta_usuario})
+
+        # Crear la solicitud a la API de OpenAI con el historial de mensajes
+        messages = [
+            {"role": "system", "content": "Eres un asistente virtual que ayuda a los usuarios con información sobre establecimientos. Solo puedes hablar sobre los establecimientos, obiviamente puedes interactuar con el usuario, pero que el tema solo sea de los establecimientos"},
+            {"role": "system", "content": f"Esta es la información de los establecimientos: {establecimientos_info}"}
+        ] + session['chat_history']
 
         # Realizar la solicitud a la API de OpenAI
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
-            messages=[
-                {"role": "system", "content": "Eres un asistente virtual que ayuda a los usuarios con información sobre establecimientos."},
-                {"role": "user", "content": mensaje}
-            ]
+            messages=messages
         )
 
         respuesta = response['choices'][0]['message']['content']
+
+        # Añadir la respuesta de la API al historial
+        session['chat_history'].append({"role": "assistant", "content": respuesta})
 
         return jsonify({'respuesta': respuesta}), 200
     except Exception as e:
