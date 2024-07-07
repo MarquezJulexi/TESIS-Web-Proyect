@@ -18,7 +18,7 @@ const Map = ({ establecimientos, onEstablecimientoSelect }) => {
     setSelectedEstablecimiento(establecimiento);
     onEstablecimientoSelect(establecimiento); // Llamar a la función del padre para actualizar la tabla
   };
-
+  /*<ZoomControl position="bottomright" />*/
   return (
     <div className="map-container">
       <MapContainer center={[-0.95156069, -80.6914418]} zoom={13} className="leaflet-map">
@@ -26,7 +26,7 @@ const Map = ({ establecimientos, onEstablecimientoSelect }) => {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         />
-        <ZoomControl position="bottomright" />
+        
         {establecimientos.map((establecimiento) => (
           <Marker
             key={establecimiento.id}

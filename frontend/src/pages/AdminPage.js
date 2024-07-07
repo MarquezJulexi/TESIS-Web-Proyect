@@ -118,6 +118,7 @@ const AdminPage = () => {
           mostrarMensaje={mostrarMensajeTemporal}
         />
       </div>
+
     </div>
 
   );

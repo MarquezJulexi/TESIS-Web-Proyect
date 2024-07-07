@@ -1,54 +1,110 @@
-/* src/pages/css/HomePage.css */
-
 .hp-homepage {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  padding: 20px;
+  height: 100vh;
 }
 
 .hp-header {
-  width: 100%;
+  flex: 0 0 auto;
   text-align: center;
-  padding: 15px;
+  background-color: #b8adab;
+  margin: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
   border-radius: 10px;
-  background-color: #f5f5f5;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  margin-bottom: 20px;
 }
 
 .hp-main-content {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  max-width: 1200px;
-}
-
-.hp-left-column, .hp-right-column {
+  position: relative;
   flex: 1;
-  padding: 15px;
-  margin: 10px;
-  border-radius: 10px;
-  background-color: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  overflow: auto;
 }
 
-.hp-left-column {
-  margin-right: 20px;
-}
-
-.hp-right-column {
-  margin-left: 20px;
-}
-
-.hp-agent-container {
-  margin-top: 20px;
-  padding: 15px;
-  border-radius: 10px;
-  background-color: #ffffff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.leaflet-map {
+  height: 100%;
   width: 100%;
-  max-width: 800px;
-  text-align: center;
+}
+
+.hp-establecimientos-tabla {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 35%;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  transition: transform 0.3s ease;
+}
+
+.hp-establecimientos-tabla.plegado {
+  transform: translateX(-100%);
+}
+
+.hp-establecimientos-tabla.desplegado {
+  transform: translateX(0);
+}
+
+.hp-tabla-contenido {
+  padding: 10px;
+}
+
+.hp-plegar-boton {
+  position: absolute;
+  top: 50%;
+  right: -20px;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 20%;
+  cursor: pointer;
+  font-size: 25px;
+  font-weight: bolder;
+}
+
+.hp-plegar-boton1 {
+  position: absolute;
+  top: -5%;
+  left: 50%;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 20%;
+  cursor: pointer;
+  font-size: 25px;
+  font-weight: bolder;
+}
+
+.hp-cerrar-boton {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #f0f0f0;
+  border: 1px solid #ccc;
+  border: none;
+  cursor: pointer;
+  font-weight: bolder;
+}
+
+.hp-agente-virtual-boton {
+  position: absolute;
+  bottom: 5%;
+  right: 2%;
+  z-index: 1000;
+}
+
+.hp-agente-virtual {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 35%;
+  height: 75%;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  transition: transform 0.3s ease;
+}
+
+.hp-agente-virtual.plegado {
+  transform: scaleY(0.1) translateY(50%);
+}
+
+.hp-agente-virtual.desplegado {
+  transform: scaleY(1) translateY(0);
 }

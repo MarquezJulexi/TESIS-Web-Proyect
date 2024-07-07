@@ -9,6 +9,10 @@ import './css/HomePage.css';
 const HomePage = () => {
   const [establecimientos, setEstablecimientos] = useState([]);
   const [tablaEstablecimiento, setTablaEstablecimiento] = useState(null);
+  const [mostrarTabla, setMostrarTabla] = useState(false);
+  const [plegadoTabla, setPlegadoTabla] = useState(false);
+  const [mostrarAgente, setMostrarAgente] = useState(false);
+  const [plegadoAgente, setPlegadoAgente] = useState(false);
 
   useEffect(() => {
     const fetchEstablecimientosData = async () => {
@@ -25,7 +29,29 @@ const HomePage = () => {
 
   const handleEstablecimientoSelect = (establecimiento) => {
     setTablaEstablecimiento(establecimiento);
+    setMostrarTabla(true);
+    setPlegadoTabla(false);
   };
+  const handleCerrarTabla = () => {
+    setPlegadoTabla(true);
+    setTimeout(() => setMostrarTabla(false), 300);  // Espera el tiempo de la transición
+  };
+
+  const handleCerrarAgente = () => {
+    setPlegadoAgente(true);
+    setTimeout(() => setMostrarAgente(false), 300);  // Espera el tiempo de la transición
+  };
+
+  const handleDesplegarAgente = () => {
+    setMostrarAgente(true);
+    setTimeout(() => setPlegadoAgente(false), 100); // Pequeño retraso para permitir la animación
+  };
+
+ /* <button className="hp-plegar-boton1" onClick={() => setPlegadoAgente(!plegadoAgente)}>
+  {plegadoAgente ? '↑' : '↓'}
+  </button>
+    elemento no implmentado por bugs***
+  */
 
   return (
     <div className="hp-homepage">
@@ -33,18 +59,46 @@ const HomePage = () => {
         <Header />
       </header>
       <div className="hp-main-content">
-        <div className="hp-left-column">
-          <EstablecimientosTabla establecimiento={tablaEstablecimiento} />
-        </div>
-        <div className="hp-right-column">
-          <Map establecimientos={establecimientos} onEstablecimientoSelect={handleEstablecimientoSelect} />
-        </div>
-      </div>
-      <div className="hp-agent-container">
-        <AgenteVirtual />
+        <Map establecimientos={establecimientos} onEstablecimientoSelect={handleEstablecimientoSelect} />
+        {mostrarTabla && (
+          <div className={`hp-establecimientos-tabla ${plegadoTabla ? 'plegado' : 'desplegado'}`}>
+            <button className="hp-plegar-boton" onClick={() => setPlegadoTabla(!plegadoTabla)}>
+              {plegadoTabla ? '→' : '←'}
+            </button>
+            {!plegadoTabla && (
+              <div className="hp-tabla-contenido">
+                <button className="hp-cerrar-boton" onClick={handleCerrarTabla}>X</button>
+                <EstablecimientosTabla establecimiento={tablaEstablecimiento} />
+              </div>
+            )}
+          </div>
+        )}
+        {mostrarAgente && (
+          <div className={`hp-agente-virtual ${plegadoAgente ? 'plegado' : 'desplegado'}`}>
+
+            <div className="contenido-agente">
+              {!plegadoAgente && (
+                <div>
+                    <button className="hp-cerrar-boton" onClick={handleCerrarAgente}>X</button>
+                    <AgenteVirtual />
+                </div>
+                )}
+            </div>
+
+          </div>
+        )}
+        {!mostrarAgente && (
+          <div className="hp-agente-virtual-boton">
+            <button onClick={handleDesplegarAgente}>
+              Agente Virtual
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
 };
+
+
 
 export default HomePage;

@@ -1,6 +1,6 @@
 /* src/components/css/Map.css */
 .map-container {
-  height: 500px; /* Ajusta la altura según tus necesidades */
+  height: 100%; /* Ajusta la altura según tus necesidades */
   width: 100%;
 }
 

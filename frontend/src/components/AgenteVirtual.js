@@ -53,14 +53,16 @@ const AgenteVirtual = () => {
             ))}
           </div>
         </div>
-        <textarea
-          className="input-message"
-          placeholder="Pregunta sobre algún establecimiento o dime las características que esperas de tu establecimiento"
-          value={mensajeUsuario}
-          onChange={(e) => setMensajeUsuario(e.target.value)}
-          onKeyPress={handleKeyPress}
-        />
-        <button className="send-button" onClick={enviarMensaje}>Enviar</button>
+        <div className='av-bajo'>
+          <textarea
+            className="input-message"
+            placeholder="Pregunta sobre algún establecimiento o dime las características que esperas de tu establecimiento"
+            value={mensajeUsuario}
+            onChange={(e) => setMensajeUsuario(e.target.value)}
+            onKeyPress={handleKeyPress}
+          />
+          <button className="send-button" onClick={enviarMensaje}>Enviar</button>
+        </div>
       </div>
     );
   };
